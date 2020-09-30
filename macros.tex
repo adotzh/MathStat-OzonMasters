@@ -1,0 +1,54 @@
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+
+\theoremstyle{definition}
+\newtheorem{defin}{Определение}
+
+\theoremstyle{plain}
+\newtheorem{thm}{Теорема}
+
+\theoremstyle{remark}
+\newtheorem*{prf}{Доказательство}
+\newtheorem*{remark}{Примечание}
+
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+\newcommand{\homework}[6]{
+   \pagestyle{myheadings}
+   \thispagestyle{plain}
+   \newpage
+   \setcounter{page}{1}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{\vspace{2mm}
+    \hbox to 6.28in { {\bf OzonMasters - Математическая статистика \hfill {\small (#2)}} }
+       \vspace{3mm}
+       \hbox to 6.28in { {\Large \hfill #1  \hfill} }
+       \vspace{3mm}
+       \hbox to 6.28in { {\it Преподаватель: {\rm #3} \hfill Автор конспекта: {\rm #5}}}
+       %\hbox to 6.28in { {\it TA: #4  \hfill #6}}
+      \vspace{1mm}}
+   }
+   \end{center}
+   \markboth{Математическая статистика -- #1}{Математическая статистика -- #1}
+   \vspace*{1mm}
+}
+
+\newcommand{\problem}[1]{~\\\fbox{\textbf{Условие #1}}\newline\newline}
+\newcommand{\subproblem}[1]{~\newline\textbf{(#1)}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Hy}{\mathcal{H}}
+\newcommand{\VS}{\textrm{VS}}
+\newcommand{\solution}[1]{~\\\fbox{\textbf{Решение #1}}\newline}
+
+
+\newcommand{\bbF}{\mathbb{F}}
+\newcommand{\bbX}{\mathbb{X}}
+\newcommand{\bI}{\mathbf{I}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\bepsilon}{\boldsymbol{\epsilon}}
+\newcommand{\balpha}{\boldsymbol{\alpha}}
+\newcommand{\bbeta}{\boldsymbol{\beta}}
+\newcommand{\0}{\mathbf{0}}
