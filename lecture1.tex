@@ -189,6 +189,140 @@ x = q_p =
 \end{defin}
 
 Во многих пакетах вместо среднего берется мода - $mode(U_i) = \frac{i-1}{n-1}$, соответственно в качестве опорных точек $(\frac{k - 1}{n-1}, x_{(k)}), k = 1, \cdots n$.
+
+\section{BoxPlot - box and whiskers}
+\begin{defin}
+IQR (interval quartile range) - межквартильный размах, расстояние между $\dfrac14$ - квантилем (нижний квартиль) и $\dfrac34$  - квантилем (верхний квартиль). 
+\end{defin}
+
+\begin{figure}[h]
+\begin{minipage}[h]{0.7\linewidth}
+BoxPlot строится для выборки $x_1, \cdots x_n$ следующим образом:
+\begin{enumerate}
+    \item коробка - на графике функции отмечается $\dfrac12$  - квантиль и вокруг него строится межквартильный размах (IQR) в виде прямоугольника;
+    \item усы - отменяается ближайшее сверху значение из выборки к границе $q_{\frac14} - 1.5 * IQR$ и ближайшее снизу значение из выборки к границе $q_{\frac34} + 1.5 * IQR$, эти значения являются концами усов
+\end{enumerate}
+\end{minipage}
+\hfill
+\begin{minipage}[h]{0.4\linewidth}
+\center{\includegraphics[width=0.45\linewidth]{boxplot.png}}
+\end{minipage}
+\end{figure}
+
+\begin{defin}
+Значения, не попавшие в boxplot называются \textbf{выбросами}.
+\end{defin}
+\begin{remark}
+Чем меньше коробка, тем больше мы можем доверять медиане. Рассмотрим на примере подбрасывания монеты. Собирается статистика эксперимента. Полученная медиана выборки = 30 (30 раз выпал орел), но выборка имеет очень большой разброс (IQR - большой, относительно медианы). Это означает, что значению медиане нельзя достаточно доверять и результаты эксперимента не надежны.
+\end{remark}
+
+\section{Оценивание параметров}
+
+ \subsection{Постановка задачи}
+Дан набор $X_1, \cdots X_n$ - i.i.d., случайные величины имеют параметрическое распределение $\sim \mathbb{P}_{\overrightarrow{\theta}}$. Рассматривая выборку $x_1, x_2 \cdots x_n$ - оценить параметр $\overrightarrow{\theta}$.
+
+\subsection{Метод моментов}
+Рассматриваем математическое ожидание некоторой функции - $\mathbb{E}g(X) = m(\overrightarrow{\theta})$, где $X \sim X_i$. Оцениваем математическое ожидание как: $\frac1n \sum g(x_i) = m(\hat{\theta}_n)$, тогда $\hat{\theta}_n = m(^{-1}) (\frac1n \sum g(x_i))$
+
+\subsubsection*{Пример 1}
+Задано нормальное распредление $\mathcal{N}(\mu, 1)$. Предположим $g(x) = x$, тогда $\mathbb{E}(X) = \mu \Rightarrow \frac1n \sum x_i = \hat{\mu}_n$.
+
+\subsubsection*{Пример 2}
+Задано нормальное распредление $\mathcal{N}(\mu, \sigma^2)$. Предположим $g(x) = x$, тогда $\mathbb{E}(X) = \mu \Rightarrow \frac1n \sum x_i = \hat{\mu}_n$ и $g(x) = x^2$, тогда $\mathbb{E}(X^2) = \mu^2 + \sigma^2 \Rightarrow \frac1n \sum x_i,2 = \mu_n^2 + \sigma_n^2 \Rightarrow \hat{\sigma}_n^2 = \frac1n\sum x_i^2 - \hat{\mu}_n^2$
+
+\subsection{Метод максимального правдоподобия}
+\begin{defin}
+$L(\overrightarrow{\theta}) = \Pi p_{\theta}(x_i)$ - функция правдоподобия.
+\end{defin}
+Метод заключается в формировании предположение о плотности распредления набора i.i.d.$(X_1, \cdots X_n \sim p(\overrightarrow{x})$. 
+
+\subsubsection*{Пример 1}
+Задано нормальное распредление $\mathcal{N}(\mu, 1)$. Предположим $p_{\mu}(x) = \dfrac{1}{\sqrt{2\pi\sigma}} \exp{- \frac{(x-\mu)^2}{2\sigma^2}}$, тогда 
+$$
+\log L(\overrightarrow{\theta}) = \sum \log \left( \dfrac{1}{\sqrt{2\pi\sigma}} \exp{- \frac{(x-\mu)^2}{2\sigma^2}} \right) = n \log \left( \dfrac{1}{\sqrt{2\pi\sigma}}\right) - \sum \frac{(x-\mu)^2}{2\sigma^2} \rightarrow max_{\mu}
+$$
+
+\begin{remark}
+Пакеты работают по следующей логике: на вход подается подсчитанная функция и внутри пакета рассчитывается ее максимум или минимум по параметру.
+\end{remark}
+
+\subsection{Экспоненциальное семейство распредлений}
+\begin{defin}
+Семейство распределений $\mathcal{P} - (p_{v}(x))$ - называется экспоненциальным, если $\exists g,d$ - функции, такие что $p_v(x) = g(x) e^{xv - d(v)}$
+\end{defin}
+
+\subsubsection*{Пример 1}
+Задано нормальное распредление $\mathcal{N}(\mu, 1)$. Предположим $$
+p_{\mu}(x) = \dfrac{1}{\sqrt{2\pi}} \exp{(- \frac{(x-\mu)^2}{2})} = \dfrac{1}{\sqrt{2\pi\sigma}} \exp{(- \frac{-x +2x\mu - \mu^2}{2})} = \dfrac{1}{\sqrt{2\pi\sigma}} \exp{(\frac{-x}{2})} \exp{(x\mu - \frac{\mu^2}{2})} 
+$$
+Тогда $v = \mu, d(v) = \dfrac{\mu^2}{2} = \dfrac{v^2}{2}$
+
+\subsubsection*{Пример 2}
+\textbf{Схема Бернулли (подрасывание монеты)} - дискретное распредление $p_v(x) = \mathbb{P}{X = x}$.
+
+\begin{equation*}
+p_v(x) = 
+    \begin{cases}
+        p,x = 1 \\
+        1-p, x = 0
+    \end{cases}
+= p^x (1 - p)^{1 - x} = e^{x\log p} e^{(1-x) \log (1-p)} = e^{x \log \frac{p}{1-p}} e^{\log (1-p)}
+\end{equation*}
+Обозначим $v = \dfrac{p}{1 - p} \Rightarrow p = \dfrac{e^v}{e^v + 1}$, тогда $d(v) = -log(1-p) = - \log \left(1 - \dfrac{e^v}{e^v + 1} \right) = \log(e^v + 1)$
+\begin{prop}
+$d'(v) = \mathbb{E}(\xi), \xi \sim p_v(x)$, $d''(v) = \mathbb{D}(\xi)$.
+\end{prop}
+\begin{prf}
+----
+\end{prf}
+
+Из первого примера $d(v) = \dfrac{v^2}{2} \Rightarrow d'(v) = v = \mu, d''(v) = 1$.
+
+Из второго примера $d(v) = \log(e^v + 1) \Rightarrow d'(v) = \dfrac{e^v}{e^v + 1} = p$, $d''(v) = \dfrac{e^v}{(e^v + 1)^2} = p(1-p)$
+
+
+\subsubsection{Метод моментов для э.с.р.}
+
+$\mathbb{E}\xi = d'(v)$, тогда $\dfrac1n \sum x_i = d'(\hat{v}_n)$. 
+
+Поскольку $d''(v) \leq 0$ (дисперсия), тогда $d'(v)$ - монотонно возрастающая и непрерывная (посколькую имеет производную) $\Rightarrow \exists (d')^(-1) \Rightarrow \hat{v_n} = (d')^{(-1)} \left(\dfrac1n \sum x_i \right)$
+
+\subsubsection{Метод максимального правдоподобия для э.с.р.}
+
+$L(\hat{v}) = \Pi p_{v}(x_i) = \dfrac1n \sum \log (g(x_i) e^{x_iv - d(v)}) = \dfrac1n \sum \log (g(x_i)) + \dfrac1n \sum (x_iv - d(v))$
+
+$\argmax \log L(v) = argmax \dfrac1n \sum (x_iv - d(v))$, обозначим $G(v) = \dfrac1n \sum (x_iv - d(v))$, тогда $G'(v) = \dfrac1n\sum x_i - d'(\hat{v_n}) = 0$, $\hat{v_n} = (d')^{(-1)}\left(\dfrac1n \sum x_i \right)$
+
+\section{Достаточная статистика}
+Может ли функция от выборки заменить саму выборку? Что если нам известны только агрегированные параметры (метапараметры)?
+\begin{defin}
+Достаточная статистика (sufficient statistics) - статистика $T(x_1, \cdots x_n)$ называется достаточной, если $\mathbb{P}\{(X_1, \cdots X_n) \in B | T(X_1, \cdots X_n) = t\}$ не зависит от параметров распредления $ B\in \mathbb{R}^n$
+\end{defin}
+
+\begin{ext}
+\textbf{Критерий факторизации}. Cтатистика называется достаточной тогда и только тогда, когда $p_v(x_1) \cdot \cdots p_v(x_n) = g(T(x_1, \cdots x_n), \theta)h(x_1, \cdots x_n)$
+\end{ext}
+
+
+Выборка моделируется следующим образом:
+\begin{enumerate}
+    \item выбирается значением статистики $T(X_1, \cdots X_n)$.
+    \item зная условное распредление строю выборку на основе информации о статистике.
+\end{enumerate}
+
+\subsection*{Пример 1}
+Найдем достаточную статистику для экспоненциального семейства распредления, если она существует.
+Запишем произведение плотностей из критерия факторизации:
+$$p_v(x_1) * \cdots p_v(x_n) = g(x_1)* \cdots g(x_n) e^{v\sum x_i - n d(v)}$$
+Тогда видим, что функция зависит неподредственно от суммы выборки и не зависит от каждого значения в отдельности. По критерию факторизации достаточная статистика $T = \sum x_i$
+
+\subsection*{Пример 2}
+Выборка из ранвомерного распредления на отрезке $[0, \theta]$, $X_1, \cdots X_n \sim Unif([0, \theta])$. Тогда $p_{\theta}(x) = \dfrac{1}{\theta}\mathbb{I}\{x \in [0, \theta]\}$.
+Применим критерий факторизации:
+$$p_v(x_1) \cdots p_v(x_n) = \dfrac{1}{\theta^n}\mathbb{I}\{x_1 \in [0,\theta] \cdots x_n \in [0, \theta]\} = \dfrac{1}{\theta^n}\mathbb{I}\{max(x_1, \cdots x_n) < \theta\}
+$$. Получаем, что $T = max(x_1, \cdots x_n)$ - достаточная статистика.
+
+
 \end{document}
 
 
